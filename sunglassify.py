@@ -113,37 +113,38 @@ class Sunglassify(QWidget):
         self.overlay_sunglasses(image, left_eye_coords, right_eye_coords)
     
     def overlay_sunglasses(self, image, left_eye_coords, right_eye_coords):
-        # Step 1: Calculate the center and distance between the eyes
+        # Calculate centers and distance
         left_eye_center = np.mean(left_eye_coords, axis=0).astype(int)
         right_eye_center = np.mean(right_eye_coords, axis=0).astype(int)
-
         eye_center = np.mean([left_eye_center, right_eye_center], axis=0).astype(int)
-
         eye_distance = np.linalg.norm(right_eye_center - left_eye_center)
-
-        # Step 2: Load and resize the sunglasses image
+    
+        # Calculate rotation angle
+        dy = right_eye_center[1] - left_eye_center[1]
+        dx = right_eye_center[0] - left_eye_center[0]
+        angle = np.degrees(np.arctan2(dy, dx))
+    
+        # Load and resize sunglasses
         sunglasses = Image.open('sunglasses.png').convert('RGBA')
-
-        # Resize the sunglasses
         scaling_factor = eye_distance / sunglasses.width * 2.4
-
         new_width = int(sunglasses.width * scaling_factor)
         new_height = int(sunglasses.height * scaling_factor)
         resized_sunglasses = sunglasses.resize((new_width, new_height), Image.Resampling.LANCZOS)
-
-        # Step 3: Calculate the top-left corner for placing the sunglasses
-        x = eye_center[0] - new_width // 2
-        y_offset = int(eye_distance * 0.1)  # Adjust this value to move glasses up/down
-        y = eye_center[1] - new_height // 2 + y_offset
-
-        # Step 4: Convert OpenCV image to PIL and overlay sunglasses
+    
+        # Rotate sunglasses
+        rotated_sunglasses = resized_sunglasses.rotate(-angle, expand=True, resample=Image.Resampling.BICUBIC)
+    
+        # Calculate new position considering rotation
+        x = eye_center[0] - rotated_sunglasses.width // 2
+        y_offset = int(eye_distance * 0.1)
+        y = eye_center[1] - rotated_sunglasses.height // 2 + y_offset
+    
+        # Overlay the rotated sunglasses
         background = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-        background.paste(resized_sunglasses, (x, y), resized_sunglasses)
-
-        # Step 5: Convert the final image back to OpenCV format
+        background.paste(rotated_sunglasses, (x, y), rotated_sunglasses)
+    
+        # Convert back to OpenCV format
         self.processed_image = cv2.cvtColor(np.array(background), cv2.COLOR_RGB2BGR)
-
-        # Step 6: Display or return the final processed image
         self.display_result(self.processed_image)
 
     def display_result(self, image):
