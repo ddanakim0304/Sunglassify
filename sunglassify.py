@@ -11,7 +11,7 @@ from PIL import Image
 class Sunglassify(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle('PyQt GUI Setup')
+        self.setWindowTitle('Sunglassify')
         self.setGeometry(100, 100, 800, 600)
 
         # Create layout and widgets
