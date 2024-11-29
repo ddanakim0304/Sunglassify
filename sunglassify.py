@@ -140,14 +140,14 @@ class Sunglassify(QWidget):
         background.paste(resized_sunglasses, (x, y), resized_sunglasses)
 
         # Step 5: Convert the final image back to OpenCV format
-        processed_image = cv2.cvtColor(np.array(background), cv2.COLOR_RGB2BGR)
+        self.processed_image = cv2.cvtColor(np.array(background), cv2.COLOR_RGB2BGR)
 
         # Step 6: Display or return the final processed image
-        self.display_result(processed_image)
+        self.display_result(self.processed_image)
 
     def display_result(self, image):
         # Convert the image to Qt format
-        height, width, channel = image.shape
+        height, width, _ = image.shape
         bytes_per_line = 3 * width
         qt_image = QImage(image.data, width, height, bytes_per_line, QImage.Format_RGB888).rgbSwapped()
 
@@ -160,7 +160,24 @@ class Sunglassify(QWidget):
         self.save_button.setEnabled(True)
 
     def save_photo(self):
-        print("Save button clicked!")
+        # Check if a processed image exists
+        if not hasattr(self, 'processed_image') or self.processed_image is None:
+            QMessageBox.warning(self, "Warning", "No processed image to save!")
+            return
+        options = QFileDialog.Options()
+        save_path, _ = QFileDialog.getSaveFileName(self, "Save Image", "", "Image Files (*.png *.jpg *.jpeg *.bmp)", options=options)
+
+        if not save_path:
+            QMessageBox.warning(self, "Warning", "No save path selected!")
+            return
+
+        # Save the processed image
+        try:
+            cv2.imwrite(save_path, self.processed_image)
+            QMessageBox.information(self, "Success", f"Image saved successfully at:\n{save_path}")
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Failed to save image: {str(e)}")
+            print(f"Error saving image: {e}")
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
