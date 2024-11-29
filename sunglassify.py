@@ -124,8 +124,8 @@ class SunglassifyApp(QWidget):
         right_eye_center = np.mean(right_eye_coords, axis=0).astype(int)
         eye_center = ((left_eye_center + right_eye_center) // 2).astype(int)
         eye_width = np.linalg.norm(right_eye_center - left_eye_center)
-        scaling_factor = eye_width / sunglasses.width * 1.5
-
+        scaling_factor = eye_width / sunglasses.width * 1.25
+        
         # Resize the sunglasses image
         new_width = int(sunglasses.width * scaling_factor * 2)
         new_height = int(sunglasses.height * scaling_factor * 2)
