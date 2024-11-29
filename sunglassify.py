@@ -152,9 +152,9 @@ class Sunglassify(QWidget):
         qt_image = QImage(image.data, width, height, bytes_per_line, QImage.Format_RGB888).rgbSwapped()
 
         # Display the image
-        self.result_image_label.setPixmap(QPixmap.fromImage(qt_image).scaled(
-            self.result_image_label.width(),
-            self.result_image_label.height(),
+        self.processed_photo_label.setPixmap(QPixmap.fromImage(qt_image).scaled(
+            self.processed_photo_label.width(),
+            self.processed_photo_label.height(),
             Qt.KeepAspectRatio
         ))
         self.save_button.setEnabled(True)
