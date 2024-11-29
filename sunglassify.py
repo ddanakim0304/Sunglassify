@@ -125,7 +125,7 @@ class Sunglassify(QWidget):
         sunglasses = Image.open('sunglasses.png').convert('RGBA')
 
         # Resize the sunglasses
-        scaling_factor = eye_distance / sunglasses.width * 1.25
+        scaling_factor = eye_distance / sunglasses.width * 2.4
 
         new_width = int(sunglasses.width * scaling_factor)
         new_height = int(sunglasses.height * scaling_factor)
@@ -133,7 +133,8 @@ class Sunglassify(QWidget):
 
         # Step 3: Calculate the top-left corner for placing the sunglasses
         x = eye_center[0] - new_width // 2
-        y = eye_center[1] - new_height // 2
+        y_offset = int(eye_distance * 0.1)  # Adjust this value to move glasses up/down
+        y = eye_center[1] - new_height // 2 + y_offset
 
         # Step 4: Convert OpenCV image to PIL and overlay sunglasses
         background = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
