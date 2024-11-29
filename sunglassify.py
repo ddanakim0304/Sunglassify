@@ -1,6 +1,7 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QLabel
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QLabel, QFileDialog, QMessageBox
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPixmap
 
 class Sunglassify(QWidget):
     def __init__(self):
@@ -20,7 +21,6 @@ class Sunglassify(QWidget):
         self.original_photo_label.setAlignment(Qt.AlignCenter)
         layout.addWidget(self.original_photo_label)
         
-
         self.process_button = QPushButton('Add Sunglasses 😎', self)
         self.process_button.clicked.connect(self.process_photo)
         layout.addWidget(self.process_button)
@@ -35,6 +35,40 @@ class Sunglassify(QWidget):
         
         # Set the layout
         self.setLayout(layout)
+
+    def upload_photo(self):
+        options = QFileDialog.Options()
+        file_name, _ = QFileDialog.getOpenFileName(
+            self, 
+            "Open Image", 
+            "", 
+            "Image Files (*.png *.jpg *.jpeg *.bmp)",
+            options=options
+        )
+        if file_name:
+            # Check whether loading image is possible
+            pixmap = QPixmap(file_name)
+            # If the imaged is loaded successfully
+            if not pixmap.isNull():
+                # Set the pixmap of the label and scale it to fit the label
+                self.original_photo_label.setPixmap(pixmap.scaled(self.original_photo_label.width(), self.original_photo_label.height(), Qt.KeepAspectRatio))
+                self.image_path = file_name
+            # If the image cannot be loaded, show a warning message
+            else:
+                QMessageBox.warning(self, "Warning", "Cannot load image!")
+                print("Cannot load image.")
+
+            print(f"Image loaded: {file_name}")
+        else:
+            # If no image is selected, show a warning message
+            QMessageBox.warning(self, "Warning", "No image selected!")
+            print("No image selected.")
+
+    def process_photo(self):
+        print("Add sunglasses button clicked!")
+
+    def save_photo(self):
+        print("Save button clicked!")
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
