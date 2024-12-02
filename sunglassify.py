@@ -14,26 +14,30 @@ class Sunglassify(QWidget):
         self.setWindowTitle('Sunglassify')
         self.setGeometry(100, 100, 800, 600)
 
-        # Create layout and widgets
+        # Create layout
         layout = QVBoxLayout()
 
-        # Create buttons and labels
+        # Create upload button, connected with corresponding method
         self.upload_button = QPushButton('Upload Photo', self)
         self.upload_button.clicked.connect(self.upload_photo)  
         layout.addWidget(self.upload_button)
 
+        # Create lable for original image
         self.original_photo_label = QLabel('Original Photo', self)
         self.original_photo_label.setAlignment(Qt.AlignCenter)
         layout.addWidget(self.original_photo_label)
         
-        self.process_button = QPushButton('Add Sunglasses 😎', self)
+        # Create process image button
+        self.process_button = QPushButton('Sunglassify 😎', self)
         self.process_button.clicked.connect(self.process_photo)
         layout.addWidget(self.process_button)
-            
+        
+        # Create processed image label
         self.processed_photo_label = QLabel('Sunglassified Photo', self)
         self.processed_photo_label.setAlignment(Qt.AlignCenter)
         layout.addWidget(self.processed_photo_label)
 
+        # Create save image button
         self.save_button = QPushButton('Save Photo', self)  
         self.save_button.clicked.connect(self.save_photo)      
         layout.addWidget(self.save_button)
@@ -51,7 +55,6 @@ class Sunglassify(QWidget):
             options=options
         )
         if file_name:
-            # Check whether loading image is possible
             pixmap = QPixmap(file_name)
             # If the imaged is loaded successfully
             if not pixmap.isNull():
