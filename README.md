@@ -8,6 +8,16 @@ Sunglassify is a desktop application that overlays virtual sunglasses on photos 
 ![ezgif-3-6643745efe](https://github.com/user-attachments/assets/4ffb5ea6-abf8-47c8-bdb8-72d0ab19023f)
 
 
+## Algorithm
+```mermaid
+graph TD
+    A[Upload Photo] --> B[Detect Eyes with Computer Vision Model]
+    B --> C[Find Coordinates and Angle of Eyes]
+    C --> D[Adjust Size & Angle of Sunglasses]
+    D --> E[Overlay Sunglasses onto Original Image]
+```
+
+
 ## Features
 
 - **GUI with PyQt5**: User-friendly interface for seamless interactions.
