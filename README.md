@@ -1,5 +1,7 @@
 # Sunglassify 😎
 
+### More detailed explanation [here!](https://medium.com/@ddanakim0304/how-i-used-pyqt-and-computer-vision-to-add-swag-to-photos-84e2e617755a)
+
 <img width="447" alt="image" src="https://github.com/user-attachments/assets/d867f308-95da-4049-a1a4-27f76b8c2914">
 
 
@@ -24,15 +26,6 @@ graph TD
 - **Face Detection with Mediapipe**: Uses Mediapipe's Face Mesh for precise eye landmark detection.
 - **Image Processing with OpenCV and Pillow**: Powered by OpenCV and Pillow for efficient transformations.
 - **Save Functionality**: Export edited images in various formats.
-
-## Tools and Technologies
-
-- **Python**: Core programming language.
-- **PyQt5**: GUI framework for desktop apps.
-- **Mediapipe**: Face landmark detection.
-- **OpenCV**: Image processing and manipulation.
-- **Pillow**: Advanced image editing.
-- **NumPy**: Numerical computation.
 
 ## Installation
 
