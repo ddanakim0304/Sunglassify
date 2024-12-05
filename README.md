@@ -1,6 +1,6 @@
 # Sunglassify 😎
 
-### More detailed explanation [here!](https://medium.com/@ddanakim0304/how-i-used-pyqt-and-computer-vision-to-add-swag-to-photos-84e2e617755a)
+### [More detailed explanation in my Medium post!](https://medium.com/@ddanakim0304/how-i-used-pyqt-and-computer-vision-to-add-swag-to-photos-84e2e617755a)
 
 <img width="447" alt="image" src="https://github.com/user-attachments/assets/d867f308-95da-4049-a1a4-27f76b8c2914">
 
