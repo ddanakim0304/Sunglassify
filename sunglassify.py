@@ -73,30 +73,28 @@ class Sunglassify(QWidget):
             print("No image selected.")
 
     def process_photo(self):
-        # Step 1: Ensure an image is uploaded
+        # Check if an image is uploaded
         if not hasattr(self, 'image_path') or not self.image_path:
             QMessageBox.warning(self, "Warning", "Please upload an image first.")
             return
-
-        # Step 2: Read the image with OpenCV
         image = cv2.imread(self.image_path)
 
-        # Step 3: Convert the image to RGB
+        # Convert image to RGB for Mediapipe
         rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
-        # Step 4: Initialize Mediapipe Face Mesh
+        # Initialize Mediapipe Face Mesh
         mp_face_mesh = mp.solutions.face_mesh
         face_mesh = mp_face_mesh.FaceMesh(static_image_mode=True)
 
-        # Step 5: Process the image to detect landmarks
+        # Process the image to detect landmarks
         results = face_mesh.process(rgb_image)
 
-        # Step 6: Check if landmarks are detected
+        # Check if landmarks are detected
         if not results.multi_face_landmarks:
             QMessageBox.warning(self, "Warning", "No face detected in the image!")
             return
 
-        # Step 7: Extract left and right eye landmarks
+        # Extract left and right eye landmarks
         LEFT_EYE = [33, 133, 160, 159, 158, 157, 173, 246]
         RIGHT_EYE = [362, 263, 387, 386, 385, 384, 398, 466]
 
@@ -112,7 +110,7 @@ class Sunglassify(QWidget):
             for landmark in [results.multi_face_landmarks[0].landmark[idx] for idx in RIGHT_EYE]
         ]
 
-        # Step 8: Overlay sunglasses on the image
+        # Move on to overlaying sunglasses image with the coordinates and image 
         self.overlay_sunglasses(image, left_eye_coords, right_eye_coords)
     
     def overlay_sunglasses(self, image, left_eye_coords, right_eye_coords):
@@ -127,14 +125,12 @@ class Sunglassify(QWidget):
         dx = right_eye_center[0] - left_eye_center[0]
         angle = np.degrees(np.arctan2(dy, dx))
     
-        # Load and resize sunglasses
+        # Resize and rotate sunglasses
         sunglasses = Image.open('sunglasses.png').convert('RGBA')
         scaling_factor = eye_distance / sunglasses.width * 2.4
         new_width = int(sunglasses.width * scaling_factor)
         new_height = int(sunglasses.height * scaling_factor)
         resized_sunglasses = sunglasses.resize((new_width, new_height), Image.Resampling.LANCZOS)
-    
-        # Rotate sunglasses
         rotated_sunglasses = resized_sunglasses.rotate(-angle, expand=True, resample=Image.Resampling.BICUBIC)
     
         # Calculate new position considering rotation
@@ -150,19 +146,21 @@ class Sunglassify(QWidget):
         self.processed_image = cv2.cvtColor(np.array(background), cv2.COLOR_RGB2BGR)
         self.display_result(self.processed_image)
 
-    def display_result(self, image):
-        # Convert the image to Qt format
-        height, width, _ = image.shape
+        # Convert the image to Qt format (fixed version)
+        height, width, _ = self.processed_image.shape
         bytes_per_line = 3 * width
-        qt_image = QImage(image.data, width, height, bytes_per_line, QImage.Format_RGB888).rgbSwapped()
+        qt_image = QImage(self.processed_image.data, width, height, bytes_per_line, QImage.Format_RGB888).rgbSwapped()
 
-        # Display the image
+        # Display the image in the label
         self.processed_photo_label.setPixmap(QPixmap.fromImage(qt_image).scaled(
             self.processed_photo_label.width(),
             self.processed_photo_label.height(),
             Qt.KeepAspectRatio
         ))
+
         self.save_button.setEnabled(True)
+
+        
 
     def save_photo(self):
         # Check if a processed image exists
